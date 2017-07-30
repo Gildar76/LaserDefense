@@ -47,8 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log(totalPower);
-        Debug.Log(GameManager.instance.TotalPower);
+
         Debug.Log("Transfering power");
         if (currentLaser != null)
         {
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 transferSound.Stop();
+                lr.enabled = false;
             }
 
         } else

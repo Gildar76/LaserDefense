@@ -20,7 +20,7 @@ public class CableController : MonoBehaviour
 	void Update()
     {
         transform.rotation = Quaternion.identity;
-        lr.material.SetColor("_TintColor", Color.Lerp(Color.blue, color, currentPower / maximumPower));
+        lr.material.SetColor("_TintColor", Color.Lerp(Color.black, color, currentPower / maximumPower));
 //        beamLight.intensity = Mathf.Lerp(beamLight.intensity, 0.0f, fadeSpeed * Time.deltaTime);
     }
 }
