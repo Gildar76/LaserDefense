@@ -46,13 +46,14 @@ public class LaserController : MonoBehaviour
 
     public void Fire()
     {
-        audios[0].Play();
+        audios[1].Play();
         RaycastHit rayHit;
 
         Ray ray = new Ray(transform.position, transform.up);
         if (Physics.Raycast(ray, out rayHit))
         {
-            audios[1].Play();
+            audios[0].Play();
+            GameObject.Instantiate(SpawnManager.instance.explosion, rayHit.point, transform.rotation);
             rayHit.collider.gameObject.SetActive(false);
             rayHit.collider.gameObject.transform.position = new Vector3(0, 30.0f, 0f);
             GameManager.instance.ChangePower(2.0f);

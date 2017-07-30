@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public GameObject explosion;
     public int enemyCount = 50;
     public  GameObject enemy;
     public static SpawnManager instance;
@@ -19,6 +20,12 @@ public class SpawnManager : MonoBehaviour
         instance = this;
     }
 
+    public void Restart()
+    {
+        enemies.Clear();
+        FillEnemyList();
+
+    }
     private void FillEnemyList()
     {
         while (enemies.Count <= enemyCount) {

@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     {
         movement.x = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         transform.Translate(movement);
+        if (transform.position.x > 35.0f) transform.position = new Vector3(35.0f, transform.position.y, transform.position.z);
+        if (transform.position.x < -30.0f) transform.position = new Vector3(-30.0f, transform.position.y, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,7 +50,7 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
 
-        Debug.Log("Transfering power");
+
         if (currentLaser != null)
         {
             if (currentLaser.currentPower < currentLaser.maximumPower && totalPower > 0.0f)

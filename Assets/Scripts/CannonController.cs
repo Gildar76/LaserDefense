@@ -26,9 +26,13 @@ public class CannonController : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        currentPower = 1.0f;
+    }
     private void Update()
     {
-        firingDelay = (currentPower > 0.0f) ? 10.0f / currentPower : 9999;
+        firingDelay = (currentPower > 1.0f) ? 10.0f / currentPower : 999999.0f;
         timeSinceLastFire += Time.deltaTime;
         if (timeSinceLastFire > firingDelay)
         {
