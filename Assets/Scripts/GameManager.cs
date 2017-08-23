@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public float enemySpeed = -5.0f;
     public float enemySpeedChange = 0.5f;
     public static GameManager instance;
+    
     public float spawnDelay = 10.0f;
     public float SpawnDelayChangeOverTime = 0.03f;
     public float minSpawenDelay = 0.1f;
@@ -76,8 +77,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public Vector3[] defaultPokwerBarPositions;
+    public float powerBarPositionXoffset;
+
     private void Awake()
     {
+        //Some ugly stuff here
+        defaultPokwerBarPositions = new Vector3[11];
+        for (int i = 0; i < 11; i++)
+        {
+            defaultPokwerBarPositions[i] = new Vector3(i * powerBarPositionXoffset, 0.0f, 0.0f);
+
+        }
         gameState = GameState.Menu;
         timeSinceLastSpawn = 0.0f;
         instance = this;

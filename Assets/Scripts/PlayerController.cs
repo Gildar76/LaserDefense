@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
                 lr.material.SetTextureOffset("_MainTex", lrTextureOffset);
                 float powerTotransfor = powerTransforSpeed * Time.deltaTime;
                 currentLaser.currentPower += powerTotransfor;
+                currentLaser.powerBarController.UpdatePowerBar();
                 GameManager.instance.ChangePower(-powerTotransfor);
 
             }

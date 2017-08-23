@@ -10,6 +10,7 @@ public class ExplosionController : MonoBehaviour
 
     private void Start()
     {
+        explosionSPeed = 10f;
         Debug.Log("Starting explosion");
         explosionScale = new Vector3(0.0f, 0.0f, 0.0f);
     }

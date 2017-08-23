@@ -15,9 +15,11 @@ public class CannonController : MonoBehaviour
     private LaserController laserController;
     private CableController cableController;
     private float lookRotationTime = 0.5f;
-    
+    public powerBarController powerBarController;
+
     private void Start()
     {
+        powerBarController = GetComponentInChildren<powerBarController>();
         timeSinceLastFire = 0.0f;
         firingDelay = (currentPower > 0.0f) ? 10.0f / currentPower : 9999;
         cableController = GetComponentInChildren<CableController>();
@@ -28,7 +30,9 @@ public class CannonController : MonoBehaviour
 
     private void OnEnable()
     {
+        if (powerBarController  == null) powerBarController = GetComponentInChildren<powerBarController>();
         currentPower = 1.0f;
+        powerBarController.UpdatePowerBar();
     }
     private void Update()
     {
@@ -37,6 +41,8 @@ public class CannonController : MonoBehaviour
         if (timeSinceLastFire > firingDelay)
         {
             Fire();
+            powerBarController.UpdatePowerBar();
+
 
         }
 
@@ -47,7 +53,7 @@ public class CannonController : MonoBehaviour
     private void TargetEnemy()
     {
         if (timeSinceLastFire < lookRotationTime) return;
-        if (currentTarget.transform.position.y < 4) return;
+        if (currentTarget.transform.position.y < -5) return;
         Vector3 direction = new Vector3();
         
         direction = (currentTarget.transform.position - transform.position).normalized;
@@ -80,8 +86,6 @@ public class CannonController : MonoBehaviour
             if (!currentTarget.activeInHierarchy)
             {
                 FindClosestEnemy();
-
-
             }
             TargetEnemy();
         }
