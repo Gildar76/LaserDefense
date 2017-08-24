@@ -24,14 +24,14 @@ public class GameManager : MonoBehaviour
     public float enemySpeed = -5.0f;
     public float enemySpeedChange = 0.5f;
     public static GameManager instance;
-    
+    public Action BatteryPowerChange;
     public float spawnDelay = 10.0f;
     public float SpawnDelayChangeOverTime = 0.03f;
     public float minSpawenDelay = 0.1f;
     private int numEnemiesToSpawn = 2;
     private float timeSinceLastSpawnIncrease = 0.0f;
     private int score;
-    private float totalPower;
+    private float playerPower;
     public GameState gameState;
 
 
@@ -62,18 +62,37 @@ public class GameManager : MonoBehaviour
             ScoreChange();
         }
     }
+    [SerializeField]
+    private float batteryPower;
 
-    public float TotalPower
+
+
+    public float PlayerPower
     {
         get
         {
-            return totalPower;
+            return playerPower;
         }
 
         set
         {
-            totalPower = value;
+            playerPower = value;
             PowerChange();
+        }
+    }
+
+    public float BatteryPower
+    {
+        get
+        {
+            return batteryPower;
+        }
+
+        set
+        {
+            batteryPower = value;
+            BatteryPowerChange();
+
         }
     }
 
@@ -100,7 +119,8 @@ public class GameManager : MonoBehaviour
         numEnemiesToSpawn = 1;
         HUD.SetActive(true);
         timeSinceLastSpawn = 0.0f;
-        instance.TotalPower = 200f;
+        instance.PlayerPower = player.GetComponent<PlayerController>().maximumPower;
+        instance.BatteryPower = 200f;
         instance.Score = 0;
         spawnManager.SetActive(true);
         SpawnManager.instance.Restart();
@@ -118,11 +138,13 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         GameOverCanvas.SetActive(true);
+        instance.BatteryPower = 200.0f;
 
     }
     public void OnPowerChange()
     {
-        if (totalPower <= 0.0f && instance.GameState == GameState.Running)
+        if (PowerChange == null) return;
+        if (playerPower + batteryPower <= 0.0f && instance.GameState == GameState.Running)
         {
             instance.GameState = GameState.GameOver;
         }
@@ -186,6 +208,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         instance.GameStateChange += OnGameStateChanged;
+        instance.BatteryPowerChange += OnBatteryPowerChanged;
         instance.PowerChange += OnPowerChange;
         instance.GameState = GameState.Menu;
     }
@@ -216,10 +239,14 @@ public class GameManager : MonoBehaviour
         //if (instance.totalPower < 0.0f) instance.GameState = GameState.GameOver;
     }
 
+    public void ChangePlayerPower(float addPower)
+    {
+        PlayerPower += addPower;
+    }
     public void ChangePower(float addPower)
     {
-        totalPower += addPower;
-        PowerChange();
+        BatteryPower += addPower;
+
 
     }
 
@@ -251,6 +278,14 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void OnBatteryPowerChanged()
+    {
+        if (BatteryPowerChange == null) return;
+        if (playerPower + batteryPower <= 0.0f && instance.GameState == GameState.Running)
+        {
+            instance.GameState = GameState.GameOver;
+        }
+    }
     public void OnGenericButtonCLick(GameState gameState)
     {
         instance.GameState = gameState;

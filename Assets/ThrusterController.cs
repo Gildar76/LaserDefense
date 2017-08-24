@@ -56,7 +56,7 @@ public class ThrusterController : MonoBehaviour
     {
 
         float currentNoise = Random.Range(1 - thrusterFlickerAmount, 1);
-        Debug.Log(currentNoise);
+        //Debug.Log(currentNoise);
         thrusterMaterial.SetColor("_TintColor", color * currentNoise);
         thrusterRenderer.SetPosition(1, Vector3.up * length * currentNoise);
         

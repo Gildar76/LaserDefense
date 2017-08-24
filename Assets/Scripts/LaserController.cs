@@ -44,14 +44,15 @@ public class LaserController : MonoBehaviour
 
     }
 
-    public void Fire()
+    public bool Fire()
     {
-        audios[1].Play();
+
         RaycastHit rayHit;
 
         Ray ray = new Ray(transform.position, transform.up);
         if (Physics.Raycast(ray, out rayHit))
         {
+            audios[1].Play();
             audios[0].Play();
             GameObject.Instantiate(SpawnManager.instance.explosion, rayHit.point, transform.rotation);
             rayHit.collider.gameObject.SetActive(false);
@@ -59,13 +60,15 @@ public class LaserController : MonoBehaviour
             GameManager.instance.ChangePower(2.0f);
             GameManager.instance.AddScore(10);
             lr.SetPosition(1, new Vector3(0, rayHit.distance / 1, 0 ));
+            lr.material.SetColor("_TintColor", beamColor);
+            beamLight.intensity = lightIntencity;
+            return true;
         }
 
         //fireSound.Play();
-        
 
-        lr.material.SetColor("_TintColor", beamColor);
-        beamLight.intensity = lightIntencity;
+        return false;
+
     }
 
 }

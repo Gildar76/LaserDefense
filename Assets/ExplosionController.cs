@@ -11,7 +11,7 @@ public class ExplosionController : MonoBehaviour
     private void Start()
     {
         explosionSPeed = 10f;
-        Debug.Log("Starting explosion");
+        //Debug.Log("Starting explosion");
         explosionScale = new Vector3(0.0f, 0.0f, 0.0f);
     }
     private void OnEnable()
@@ -31,7 +31,7 @@ public class ExplosionController : MonoBehaviour
             explosionSPeed *= -2.0f;
 
         }
-        Debug.Log("Testing");
+        //Debug.Log("Testing");
         float addToScale = Time.deltaTime * explosionScaleFactor * explosionSPeed;
         explosionScale.x += addToScale;
         explosionScale.y += addToScale;

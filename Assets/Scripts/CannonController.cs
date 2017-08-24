@@ -89,9 +89,12 @@ public class CannonController : MonoBehaviour
             }
             TargetEnemy();
         }
-        laserController.Fire();
-        timeSinceLastFire = 0;
-        currentPower -= firingPowerCost;
+        if (laserController.Fire())
+        {
+            timeSinceLastFire = 0;
+            currentPower -= firingPowerCost;
+        }
+
     }
 
     private void FindClosestEnemy()

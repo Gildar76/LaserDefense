@@ -8,19 +8,22 @@ public class PlayerController : MonoBehaviour
   
     public float speed = 20.0f;
     
-    private float totalPower = 200.0f;
+    private float playerPower = 20.0f;
     private Vector3 movement;
     public float powerTransforSpeed = 2.0f;
     private CannonController currentLaser = null;
     private LineRenderer lr;
     private Vector3 lrTextureOffset;
     private AudioSource transferSound;
+    bool recharging = false;
+    public float maximumPower = 20.0f;
+
 
     private void Start()
     {
         GameManager.instance.PowerChange += OnChangePower;
 
-        GameManager.instance.TotalPower = totalPower;
+        GameManager.instance.PlayerPower = playerPower;
         lrTextureOffset = new Vector3(0, 0, 0);
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
@@ -29,7 +32,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnChangePower()
     {
-        totalPower = GameManager.instance.TotalPower;
+        playerPower = GameManager.instance.PlayerPower;
+        Debug.Log("playerPower: " + playerPower);
     }
 
     private void Update()
@@ -42,8 +46,18 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        currentLaser = other.gameObject.GetComponent<CannonController>();
-        Debug.Log("Found cannon");
+        Debug.Log(other.gameObject.tag);
+        if (other.gameObject.tag == "Batteries")
+        {
+            Debug.Log("Found battery");
+            recharging = true;
+        } else
+        {
+            recharging = false;
+            currentLaser = other.gameObject.GetComponent<CannonController>();
+            //Debug.Log("Found cannon");
+
+        }
         transferSound.Play();
     }
 
@@ -53,26 +67,48 @@ public class PlayerController : MonoBehaviour
 
         if (currentLaser != null)
         {
-            if (currentLaser.currentPower < currentLaser.maximumPower && totalPower > 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) && playerPower > maximumPower / 2.0f)
+            {
+                //Supercharge cannon
+                float powerTotransfer = playerPower;
+                currentLaser.currentPower += powerTotransfer;
+                currentLaser.powerBarController.UpdatePowerBar();
+                GameManager.instance.ChangePlayerPower(-powerTotransfer);
+            }
+            recharging = false;
+            if (currentLaser.currentPower < currentLaser.maximumPower && playerPower > 0.0f)
             {
                 lrTextureOffset.x -= Time.deltaTime * 10.0f;
                 lr.enabled = true;
                 lr.material.SetTextureOffset("_MainTex", lrTextureOffset);
-                float powerTotransfor = powerTransforSpeed * Time.deltaTime;
-                currentLaser.currentPower += powerTotransfor;
+                float powerTotransfer = powerTransforSpeed * Time.deltaTime;
+                currentLaser.currentPower += powerTotransfer;
                 currentLaser.powerBarController.UpdatePowerBar();
-                GameManager.instance.ChangePower(-powerTotransfor);
+                GameManager.instance.ChangePlayerPower(-powerTotransfer);
 
-            }
+            } 
             else
             {
                 transferSound.Stop();
                 lr.enabled = false;
             }
 
-        } else
+        }
+        else if (recharging && playerPower < maximumPower && GameManager.instance.BatteryPower > 0.0f)
+        {
+            lrTextureOffset.x += Time.deltaTime * 10.0f;
+            lr.enabled = true;
+            lr.material.SetTextureOffset("_MainTex", lrTextureOffset);
+            float powerTotransfer = powerTransforSpeed * Time.deltaTime;
+            GameManager.instance.ChangePlayerPower(powerTotransfer);
+            GameManager.instance.ChangePower(-powerTotransfer);
+            Debug.Log("Recharging!");
+
+        }
+        else
         {
             transferSound.Stop();
+            //recharging = false;
         }   
     }
 
@@ -81,6 +117,7 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
         currentLaser = null;
         transferSound.Stop();
+        recharging = false;
     }
 
 }

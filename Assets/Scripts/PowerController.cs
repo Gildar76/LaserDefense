@@ -8,19 +8,19 @@ public class PowerController : MonoBehaviour
     Text val;  
     private void Start()
     {
-        GameManager.instance.PowerChange += OnPowerChange;
+        GameManager.instance.BatteryPowerChange += OnPowerChange;
         val = GetComponent<Text>();
 
 
     }
     private void OnPowerChange()
     {
-        val.text = Mathf.Floor(GameManager.instance.TotalPower).ToString();
-        if (GameManager.instance.TotalPower > 150)
+        val.text = Mathf.Floor(GameManager.instance.BatteryPower).ToString();
+        if (GameManager.instance.BatteryPower > 150)
         {
             val.color = Color.green;
         }
-        else if (GameManager.instance.TotalPower > 75) 
+        else if (GameManager.instance.BatteryPower > 75) 
         {
             val.color = Color.yellow;
         }

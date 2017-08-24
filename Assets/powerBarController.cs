@@ -42,6 +42,7 @@ public class powerBarController : MonoBehaviour
             bar.positionCount = (int)parent.currentPower + 1;
             for (int i = 0; i <= (int)parent.currentPower; i++)
             {
+                if (i > (int)parent.maximumPower) break;
                 bar.SetPosition(i, GameManager.instance.defaultPokwerBarPositions[i]);
             }
         }
