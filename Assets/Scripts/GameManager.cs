@@ -96,16 +96,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Vector3[] defaultPokwerBarPositions;
+    public Vector3[] defaulPowerBarPositions;
     public float powerBarPositionXoffset;
 
     private void Awake()
     {
         //Some ugly stuff here
-        defaultPokwerBarPositions = new Vector3[11];
+        defaulPowerBarPositions = new Vector3[11];
         for (int i = 0; i < 11; i++)
         {
-            defaultPokwerBarPositions[i] = new Vector3(i * powerBarPositionXoffset, 0.0f, 0.0f);
+            defaulPowerBarPositions[i] = new Vector3(i * powerBarPositionXoffset, 0.0f, 0.0f);
 
         }
         gameState = GameState.Menu;
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
     }
     public void OnGameStateChanged()
     {
-        Debug.Log("Calling onGameStateChanged" + instance.GameState);
+        //Debug.Log("Calling onGameStateChanged" + instance.GameState);
         spawnManager.SetActive(false);
         player.SetActive(false);
         lasers.SetActive(false);

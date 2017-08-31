@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPowerable
 {
   
     public float speed = 20.0f;
@@ -17,10 +17,11 @@ public class PlayerController : MonoBehaviour
     private AudioSource transferSound;
     bool recharging = false;
     public float maximumPower = 20.0f;
-
+    private PowerBarController powerBar;
 
     private void Start()
     {
+        powerBar = GetComponentInChildren<PowerBarController>();
         GameManager.instance.PowerChange += OnChangePower;
 
         GameManager.instance.PlayerPower = playerPower;
@@ -33,7 +34,10 @@ public class PlayerController : MonoBehaviour
     public void OnChangePower()
     {
         playerPower = GameManager.instance.PlayerPower;
-        Debug.Log("playerPower: " + playerPower);
+
+        powerBar.UpdatePowerBar();
+
+        //Debug.Log("playerPower: " + playerPower);
     }
 
     private void Update()
@@ -46,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.tag);
+        //Debug.Log(other.gameObject.tag);
         if (other.gameObject.tag == "Batteries")
         {
             Debug.Log("Found battery");
@@ -102,7 +106,7 @@ public class PlayerController : MonoBehaviour
             float powerTotransfer = powerTransforSpeed * Time.deltaTime;
             GameManager.instance.ChangePlayerPower(powerTotransfer);
             GameManager.instance.ChangePower(-powerTotransfer);
-            Debug.Log("Recharging!");
+            //Debug.Log("Recharging!");
 
         }
         else
@@ -120,4 +124,23 @@ public class PlayerController : MonoBehaviour
         recharging = false;
     }
 
+    public float GetCurrentPower()
+    {
+        return playerPower;
+    }
+
+    public float GetMaximumPower()
+    {
+        return maximumPower;
+    }
+
+    public void SetCurrentPower(float power)
+    {
+        playerPower = power;
+    }
+
+    public void SetMaximumpower(float power)
+    {
+        maximumPower = power;
+    }
 }

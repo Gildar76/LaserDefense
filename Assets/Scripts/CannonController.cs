@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CannonController : MonoBehaviour
+public class CannonController : MonoBehaviour, IPowerable
 {
     public float rotationSpeed = 2f;
     public string enemyTag;
@@ -15,11 +16,11 @@ public class CannonController : MonoBehaviour
     private LaserController laserController;
     private CableController cableController;
     private float lookRotationTime = 0.5f;
-    public powerBarController powerBarController;
+    public PowerBarController powerBarController;
 
     private void Start()
     {
-        powerBarController = GetComponentInChildren<powerBarController>();
+        powerBarController = GetComponentInChildren<PowerBarController>();
         timeSinceLastFire = 0.0f;
         firingDelay = (currentPower > 0.0f) ? 10.0f / currentPower : 9999;
         cableController = GetComponentInChildren<CableController>();
@@ -30,7 +31,7 @@ public class CannonController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (powerBarController  == null) powerBarController = GetComponentInChildren<powerBarController>();
+        if (powerBarController  == null) powerBarController = GetComponentInChildren<PowerBarController>();
         currentPower = 1.0f;
         powerBarController.UpdatePowerBar();
     }
@@ -115,4 +116,24 @@ public class CannonController : MonoBehaviour
         }
     }
 
+    public float GetCurrentPower()
+    {
+        return currentPower;
+    }
+
+    public float GetMaximumPower()
+    {
+        return maximumPower;
+    }
+
+    public void SetCurrentPower(float power)
+    {
+        currentPower = power;
+
+    }
+
+    public void SetMaximumpower(float power)
+    {
+        maximumPower = power;
+    }
 }
